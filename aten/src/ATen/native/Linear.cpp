@@ -148,7 +148,7 @@ Tensor einsum(std::string eqn, TensorList tensors) {
   int64_t num_ell_idxes = -1;
   int64_t first_ell_idx = 0;
 
-  // The internal representation of the left hand side fo the equation (with ellipsis expanded) is stored in input_op_idxes.
+  // The internal representation of the left hand side of the equation (with ellipsis expanded) is stored in input_op_idxes.
   // For each operand, we have a vector mapping each dimension to an internal index.
   // We also keep track of the number of occurrences for each letter (to infer a right hand side if not given) and
   // of the last occurence of each index.
@@ -157,7 +157,7 @@ Tensor einsum(std::string eqn, TensorList tensors) {
   num_letter_occurrences.fill(0);
   std::vector<std::int64_t> last_idx_occurrence;                      // the last operator (left to right) using this index
 
-  if ((pos = eqn.find("->")) != std::string::npos) { // check whether we have a right hand side. in_eq is the left hand side
+  if ((pos = eqn.find("->")) != std::string::npos) { // check whether we have a right hand side. in_eqn is the left hand side
     in_eqn = eqn.substr(0, pos);
   } else {
     in_eqn = eqn;
@@ -165,7 +165,7 @@ Tensor einsum(std::string eqn, TensorList tensors) {
   // remove spaces for einsum compatibility (#9929)
   in_eqn.erase(std::remove_if(in_eqn.begin(), in_eqn.end(), isspace), in_eqn.end());
 
-  // next we parse in_eq (the left hand side) by iterating. It is a string of comma separated terms per index
+  // next we parse in_eqn (the left hand side) by iterating. It is a string of comma separated terms per index
   int64_t operand = 0;
   std::stringstream eqn_stream(in_eqn);
   std::string term;
@@ -280,7 +280,7 @@ Tensor einsum(std::string eqn, TensorList tensors) {
   // - permute the dimensions to match the order given by idxes_to_preprocessed_dims
   // - unsqueeze to create all dimensions for each index in each tensor where they are missing
   // we also check that sizes match
-  // after this, all operands will have compatible shapes (i.e. all dimensions are aligned are broadcastable)
+  // after this, all operands will have compatible shapes (i.e. all dimensions are aligned and broadcastable)
   std::vector<Tensor> preprocessed_operands;
   std::vector<std::int64_t> size_of_dims(num_total_idxes, -1); // keep track of sizes for each index, -1 means we have not seen a size yet
   for (int64_t op = 0; op < (int64_t) tensors.size(); op++) {
