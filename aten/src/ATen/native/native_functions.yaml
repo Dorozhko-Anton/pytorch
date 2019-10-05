@@ -918,6 +918,9 @@
 - func: einsum(str equation, Tensor[] tensors) -> Tensor
   use_c10_dispatcher: unboxed_only
 
+- func: einsum_2(Tensor lhs_t, Tensor rhs_t, Tensor[] tensors) -> Tensor
+  use_c10_dispatcher: unboxed_only
+
 - func: embedding(Tensor weight, Tensor indices, int padding_idx=-1, bool scale_grad_by_freq=False, bool sparse=False) -> Tensor
   use_c10_dispatcher: full
 

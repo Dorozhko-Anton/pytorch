@@ -151,6 +151,7 @@ bool aten_op_is_already_moved_to_c10(const c10::OperatorName& opName) {
         {"aten::div_", "Scalar"},
         {"aten::dot", ""},
         {"aten::einsum", ""},
+        {"aten::einsum_2", ""},
         {"aten::embedding", ""},
         {"aten::embedding_backward", ""},
         {"aten::embedding_dense_backward", ""},

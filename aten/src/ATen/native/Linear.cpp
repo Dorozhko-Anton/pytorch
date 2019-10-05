@@ -130,6 +130,43 @@ static Tensor sumproduct_pair(const Tensor& left_, const Tensor& right_, IntArra
   return result;
 }
 
+Tensor einsum_2(Tensor lhs_t, Tensor rhs_t, TensorList tensors) {
+  std::stringstream ss_eqn;
+
+  std::vector<std::vector<int>> lhs;
+
+  for (int64_t i = 0; i < lhs_t.size(0); i++) {
+    std::cout << i << std::endl;
+    Tensor t = lhs_t.slice(i);
+    lhs.push_back(std::vector<int>(t.data<int>(), t.data<int>() + t.numel()) );
+  }
+
+  std::vector<int> rhs(rhs_t.data<int>(), rhs_t.data<int>() + rhs_t.numel());
+
+  // parse lhs sublists into eqn 
+  for (auto tensor_idxs : lhs) {
+    for (auto idx : tensor_idxs) {
+      ss_eqn << "A" + idx;
+    }
+    ss_eqn << ", ";
+  }
+  // 
+  if (!rhs.empty()) {
+    ss_eqn << "->";
+    for (auto idx : rhs) {
+      ss_eqn << "A" + idx;
+    }
+  }
+  // make a call to basic einsum 
+  std::string eqn = ss_eqn.str();
+  std::cout << eqn << std::endl;
+  return at::einsum(eqn, tensors);
+}
+// Tensor einsum(TensorList tensors) {
+//   std::cout << "hello" << std::endl;
+//   return tensors[0];
+// }
+
 Tensor einsum(std::string eqn, TensorList tensors) {
   constexpr size_t number_of_letters = 26;
   std::string in_eqn;

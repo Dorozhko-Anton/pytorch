@@ -195,11 +195,22 @@ Examples::
     >>> torch.einsum('...ij->...ji', A).shape # batch permute
     torch.Size([2, 3, 5, 4])
 """
-    if len(operands) == 1 and isinstance(operands[0], (list, tuple)):
-        # the old interface of passing the operands as one list argument
-        operands = operands[0]
-    return torch._C._VariableFunctions.einsum(equation, operands)
+    if isinstance(equation, str):
+        if len(operands) == 1 and isinstance(operands[0], (list, tuple)):
+            # the old interface of passing the operands as one list argument
+            operands = operands[0]
+        return torch._C._VariableFunctions.einsum(equation, operands)
 
+    lhs = torch.Tensor(equation[0])
+    rhs = torch.Tensor(equation[1])
+    """
+import torch
+x = torch.randn(2, 2)
+x
+torch.einsum('ii->i', x)
+torch.einsum([[0,0], 0], x)
+    """
+    return torch._C._VariableFunctions.einsum_2(lhs, rhs, operands)
 
 def isfinite(tensor):
     r"""Returns a new tensor with boolean elements representing if each element is `Finite` or not.
